@@ -1,0 +1,21 @@
+//公共的
+.border-style-0{
+    border: 2px dotted #fff;
+}
+.border-style{
+    border: 1.5px dotted #fff;
+    border-radius: 15px;
+}
+
+.boder-color-animation{
+    animation: changeBorderColor 1.0s ease-in infinite alternate;
+}
+
+@keyframes changeBorderColor{
+    0%{
+        border-color: #fff;
+    }
+    100%{
+        border-color: #f00;
+    }
+}

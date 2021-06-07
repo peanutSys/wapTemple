@@ -1,0 +1,159 @@
+{
+    "code": 200, 
+    "msg": "success", 
+    "data": [
+        {
+            "name": "首页", 
+            "icon": "http://o.cztvcloud.com/272/icon/2019/08/26/2c6238c9f83a12b6f07b1e634788ec71.png", 
+            "type": "home", 
+            "sub": [
+                {
+                    "id": 14818, 
+                    "name": "头条", 
+                    "category_type": "common", 
+                    "type": 21, 
+                    "type_name": "聚合推荐", 
+                    "logo": "", 
+                    "app_style": "news", 
+                    "allow_comment": 1, 
+                    "sort": "8379", 
+                    "intro": "", 
+                    "tips": ""
+                }, 
+                {
+                    "id": 28328, 
+                    "name": "推荐", 
+                    "category_type": "common", 
+                    "type": 21, 
+                    "type_name": "聚合推荐", 
+                    "logo": "", 
+                    "app_style": "news", 
+                    "allow_comment": 1, 
+                    "sort": "8380", 
+                    "intro": "", 
+                    "tips": ""
+                }, 
+                {
+                    "id": 14819, 
+                    "name": "读报纸", 
+                    "category_type": "common", 
+                    "type": 23, 
+                    "type_name": "聚合外链", 
+                    "logo": "", 
+                    "app_style": "news", 
+                    "allow_comment": 1, 
+                    "sort": "8381", 
+                    "intro": "", 
+                    "tips": "", 
+                    "link_url": "https://paper.cztvcloud.com/jrkh/pad/layout"
+                }, 
+                {
+                    "id": 14820, 
+                    "name": "看电视", 
+                    "category_type": "common", 
+                    "type": 29, 
+                    "type_name": "图标电视栏目", 
+                    "logo": "", 
+                    "app_style": "news", 
+                    "allow_comment": 1, 
+                    "sort": "8382", 
+                    "intro": "", 
+                    "tips": ""
+                }, 
+                {
+                    "id": 14821, 
+                    "name": "听广播", 
+                    "category_type": "common", 
+                    "type": 30, 
+                    "type_name": "图标广播栏目", 
+                    "logo": "", 
+                    "app_style": "news", 
+                    "allow_comment": 1, 
+                    "sort": "8384", 
+                    "intro": "", 
+                    "tips": ""
+                }, 
+                {
+                    "id": 18956, 
+                    "name": "空中课堂", 
+                    "category_type": "common", 
+                    "type": 77, 
+                    "type_name": "镇街订阅推荐", 
+                    "logo": "", 
+                    "app_style": "news", 
+                    "allow_comment": 1, 
+                    "sort": "8385", 
+                    "intro": "", 
+                    "tips": ""
+                }, 
+                {
+                    "id": 14823, 
+                    "name": "图说开化", 
+                    "category_type": "common", 
+                    "type": 74, 
+                    "type_name": "视觉", 
+                    "logo": "", 
+                    "app_style": "news", 
+                    "allow_comment": 1, 
+                    "sort": "8386", 
+                    "intro": "", 
+                    "tips": ""
+                }, 
+                {
+                    "id": 14824, 
+                    "name": "新时代文明实践", 
+                    "category_type": "common", 
+                    "type": 34, 
+                    "type_name": "聚合外链-认证", 
+                    "logo": "", 
+                    "app_style": "news", 
+                    "allow_comment": 1, 
+                    "sort": "8387", 
+                    "intro": "", 
+                    "tips": "", 
+                    "link_url": "https://s.cztvcloud.com/kaihua/xsdIndex"
+                }, 
+                {
+                    "id": 14825, 
+                    "name": "专题", 
+                    "category_type": "common", 
+                    "type": 20, 
+                    "type_name": "通用栏目", 
+                    "logo": "", 
+                    "app_style": "news", 
+                    "allow_comment": 1, 
+                    "sort": "8388", 
+                    "intro": "", 
+                    "tips": ""
+                }, 
+                {
+                    "id": 14826, 
+                    "name": "乡镇", 
+                    "category_type": "common", 
+                    "type": 77, 
+                    "type_name": "镇街订阅推荐", 
+                    "logo": "", 
+                    "app_style": "news", 
+                    "allow_comment": 1, 
+                    "sort": "8389", 
+                    "intro": "", 
+                    "tips": ""
+                }, 
+                {
+                    "id": 15026, 
+                    "name": "活动", 
+                    "category_type": "common", 
+                    "type": 87, 
+                    "type_name": "活动", 
+                    "logo": "", 
+                    "app_style": "news", 
+                    "allow_comment": 1, 
+                    "sort": "100234", 
+                    "intro": "", 
+                    "tips": ""
+                }
+            ], 
+            "other": [ ]
+        }
+    ]
+}
