@@ -1,7 +1,7 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 var path = require('path')
 
-var proxyTarget = 'http://10.30.10.125'
+var proxyTarget = 'http://10.30.10.158'
 var tmpLiveUrl = 'http://10.30.9.84'
 
 module.exports = {

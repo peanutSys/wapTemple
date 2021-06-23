@@ -65,7 +65,7 @@
                 if ( !bc_ ) 
                     return
                 let $bc_style = $('.banner-carouse'+self.getRandomClassName() )
-                let bc_common = bc_[0]
+                let bc_common = bc_[0] || bc_
                 let local_style_data = self.getlocalData()
                 local_style_data.images.width = self.pageWidth
 
@@ -551,7 +551,7 @@
 
                     baseData.items.forEach( (item,n)=>{
                         let $ip_copy= $ip.clone()
-                        $ip_copy.find('img').attr('src',item.thumb)
+                        $ip_copy.find('img').attr('src',item.cover && item.cover[0]['path'] || '')
                         $ip_copy.find('.title').text(item.title)
                         $ip_copy.data('concrete_data',item)
                         $ele_content.append( $ip_copy)

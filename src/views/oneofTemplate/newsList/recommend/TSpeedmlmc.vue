@@ -142,7 +142,7 @@
                 let self = this 
                 if ( !tsb_) 
                     return
-                let remote_ = tsb_[0]
+                let remote_ = tsb_[0] || tsb_
                 if ( !remote_) 
                     return
 
@@ -697,7 +697,7 @@
                                 $title = $it_copy.find('.title').eq(0),
                                 $inner_title = $it_copy.find('.inner-title').eq(0)
 
-                                $img.css('backgroundImage','url('+(item.thumb || item.cover)+')')
+                                $img.css('backgroundImage','url('+(item.cover && item.cover[0]['path'] || '')+')')
                                 $title.text( item.title || item.name)
                                 $inner_title.text( item.title || item.name)
 

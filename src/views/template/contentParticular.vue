@@ -145,75 +145,118 @@
             },
             resolve_data( data_){
                 let self = this,
-                d_type = $.global_availdata.navbarType
+                d_type = $.global_availdata.navbarType,
+                frame_videoSrc = ( surl)=>{
+                    let wap_url_fragment = surl.split('.'),
+                    wufl = wap_url_fragment.length,
+                    reg = new RegExp("(\.m3u8|\.mp4)", "i")
+                    
+                    if ( wufl >0 && reg.test(surl)) {
+                        self.videosrc = surl
+                    }else{
+                        let regwap = new RegExp("(\.com|\.com\/)$")
+                        if ( regwap.test(surl) ) {
+                            self.framesrc = surl+'/share/'+data_.id+'.html'
+                        }else
+                            self.framesrc = surl
+                    }
+                }
                 
-                if ( d_type == 'service' && data_.hserviefp == 1) {
+                // if ( data_.type =='internallink' && data_.blocktype == '35') {
+                //     // self.getNetData( '/api/v1/wap/columnsCommon',data_.id ,( reponse_data)=>{
+                //     //     self.cptype = 6
+                //     //     self.wwc = reponse_data.block
+                //     // })
+                // }else if ( d_type == 'service' && data_.hserviefp == 1) {
+                //     //便民服务
+                //     self.cptype = 0
+                //     data_.link ? self.framesrc = data_.link : null
+                // }else if ( (d_type == 'service' && data_.blocktype == '84') || data_.type =='internallink' || data_.type =='topic' || data_.type =='combinLeader' || data_.type =='combinClassroom' || data_.id_wchat == 'more' ) {
 
-                    self.cptype = 0
-                    data_.link ? self.framesrc = data_.link : null
-                }else if ( data_.type =='internallink' && data_.blocktype == '35') {
-                    self.getNetData( '/api/v1/wap/columnsCommon',data_.id ,( reponse_data)=>{
-                        self.cptype = 6
-                        self.wwc = reponse_data.block
-                    })
-                }else if ( (d_type == 'service' && data_.blocktype == '84') || data_.type =='internallink' || data_.type =='topic' || data_.type =='combinLeader' || data_.type =='combinClassroom' || data_.id_wchat == 'more' ) {
+                //     if ( data_.type =='combinLeader' ) 
+                //         self.cptype = 3
+                //     else if ( data_.type =='combinClassroom' ) 
+                //         self.cptype = 4
+                //     else if ( data_.id_wchat =='more' ) {
+                //         self.cptype = 7
+                //         self.wwwc_more = data_
+                //     }else
+                //         self.cptype = 1
+                //     self.$nextTick( ()=>{
+                //         self.news_list_func && self.news_list_func( $.global_availdata.nlStyle , 'detail')
+                //         $.homelabelbarClick( data_)
+                //     })
+                // }else if ( data_.weatherC == 1) {
 
-                    if ( data_.type =='combinLeader' ) 
-                        self.cptype = 3
-                    else if ( data_.type =='combinClassroom' ) 
-                        self.cptype = 4
-                    else if ( data_.id_wchat =='more' ) {
-                        self.cptype = 7
-                        self.wwwc_more = data_
-                    }else
-                        self.cptype = 1
-                    self.$nextTick( ()=>{
-                        self.news_list_func && self.news_list_func( $.global_availdata.nlStyle , 'detail')
-                        $.homelabelbarClick( data_)
-                    })
-                }else if ( data_.weatherC == 1) {
+                //     self.cptype = 2
+                //     self.statusbar_detail_btn.weather = data_
+                // }else if( data_.type == 'political_slide' ){
 
+                //     // self.getNetData( '/api/v1/wap/columnsCommon',data_.id ,( reponse_data)=>{
+                //     //     self.cptype = 3
+                //     //     self.lg.contentData = reponse_data.block
+                //     //     self.setLayout()
+                //     // })
+                // }else if( data_.type == 'town' ){
+
+                //     // self.getNetData( '/api/v1/wap/columnsNew',data_.id ,( reponse_data)=>{
+                //     //     self.cptype = 4
+                //     //     self.cr = reponse_data
+                //     // })
+                // }else if( data_.type == 'multilive'){
+                //     // self.getNetData( '/api/v1/wap/livesDetail',data_.id ,( reponse_data)=>{
+                //     //     self.cptype = 0
+                //     //     self.framesrc = reponse_data.wap_url
+                //     // })
+                // }else if ( data_.statusbar_searchbtn == 1) {
+                //     self.cptype = 5
+                // }else{
+                     
+                // } 
+                if ( data_.weatherC == 1) {
+                    //天气
                     self.cptype = 2
                     self.statusbar_detail_btn.weather = data_
-                }else if( data_.type == 'political_slide' ){
-
-                    self.getNetData( '/api/v1/wap/columnsCommon',data_.id ,( reponse_data)=>{
-                        self.cptype = 3
-                        self.lg.contentData = reponse_data.block
-                        self.setLayout()
-                    })
-                }else if( data_.type == 'town' ){
-
-                    self.getNetData( '/api/v1/wap/columnsNew',data_.id ,( reponse_data)=>{
-                        self.cptype = 4
-                        self.cr = reponse_data
-                    })
-                }else if( data_.type == 'multilive'){
-                    self.getNetData( '/api/v1/wap/livesDetail',data_.id ,( reponse_data)=>{
-                        self.cptype = 0
-                        self.framesrc = reponse_data.wap_url
-                    })
                 }else if ( data_.statusbar_searchbtn == 1) {
+                    //搜索
                     self.cptype = 5
-                }else{
+                }else if ( data_.type == 'broadcast') {
+                    //直播
                     self.cptype = 0
-                    data_.wap_url = data_.wap_url || data_.redirect_url
-                    if ( data_.wap_url) {
-                        let wap_url_fragment = data_.wap_url.split('.'),
-                        wufl = wap_url_fragment.length,
-                        reg = new RegExp("(\.m3u8|\.mp4)", "i")
-                        
-                        if ( wufl >0 && reg.test(data_.wap_url)) {
-                            self.videosrc = data_.wap_url
+                    self.getNetData('get','/api/fusion/broadcast/liveDetail',{newsId:data_.id,appId:$.clinet_appid } ,( reponse_data)=>{
+
+                        self.cptype = 0
+                        frame_videoSrc( reponse_data.shareUrl || reponse_data.wapUrl)
+                    })
+                }else{
+                   self.getNetData('get','/api/fusion/wap/getNewsInfo',{newsId:data_.id,appId:$.clinet_appid } ,( reponse_data)=>{
+                        if ( reponse_data.link && reponse_data.link.type == 'newspaper' ||
+                             reponse_data.link && reponse_data.link.type == 'auth_link' 
+                            ) {
+                            //读报纸等外链
+                            self.cptype = 0
+                            frame_videoSrc( reponse_data.link.content || '')
+                        }else if ( 
+                                reponse_data.link && 
+                                (reponse_data.link.type == 'radio' || 
+                                reponse_data.link.type == 'tv' ) 
+                            ) { 
+                            //看电视
+                            self.cptype = 1
+                            self.$nextTick( ()=>{
+                                self.news_list_func && self.news_list_func( $.global_availdata.nlStyle , 'detail')
+                                $.homelabelbarClick( reponse_data)
+                            })
                         }else{
-                            let regwap = new RegExp("(\.com|\.com\/)$")
-                            if ( regwap.test(data_.wap_url) ) {
-                                self.framesrc = data_.wap_url+'/share/'+data_.id+'.html'
-                            }else
-                                self.framesrc = data_.wap_url
+                            self.cptype = 0
+                            frame_videoSrc( reponse_data.shareUrl || reponse_data.wapUrl)
                         }
-                    }
-                } 
+                    })
+                     
+                }
+                
+
+
             },
             //新闻列表func
             news_list_( func){
@@ -251,21 +294,12 @@
                 self.resolve_data( val_)
                 self.setLayout()
             },
-            getNetData( url,id,cb){
+            getNetData( method,url,param,cb){
                 let self = this,
                 url_ = $.ajaxGlobalUrl + url,
-                page = 1,
                 timestamp = (new Date()).getTime()+'',
-                paramJson = {
-                    'appId':$.clinet_appid,
-                    'clientId':$.clinet_clientid,
-                    'code':id+'',
-                    'version':$.clinet_appversion,
-                    'page':page,
-                    'ts':timestamp,
-                    'md5': $.MD5($.clinet_appkey+timestamp+$.clinet_appid+$.clinet_clientid+id+page+$.clinet_appversion)
-                }
-                self.netWorking(url_,'post',{'Content-Type':'application/json'},JSON.stringify( paramJson),(xhr)=>{
+                paramJson = param
+                self.netWorking(url_,method,{'Content-Type':'application/json'}, paramJson,(xhr)=>{
                     if ( xhr.responseJSON && xhr.responseJSON.code >=200 && xhr.responseJSON.code<400) {
                         let reponse_data = xhr.responseJSON.data
                         cb && cb( reponse_data)
@@ -335,6 +369,7 @@
             overflow-y: scroll;
             // -webkit-overflow-scrolling:touch; 
             .detail-iframe{
+                background-color: #fff;
                 width: 100%;
                 height: 100%;
             }

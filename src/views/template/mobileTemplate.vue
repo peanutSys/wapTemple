@@ -143,7 +143,7 @@
             if ( $.allowMachine == 1) 
             {
                //设置标题；开花好地方、兰精灵、掌上松阳
-                document.title = '掌上松阳'
+                document.title = '兰精灵'
 
                 //全局访问地址
                 $.ajaxGlobalUrl = '' //http://10.30.10.158
@@ -151,13 +151,16 @@
                 //allowMachine等于1时，天气配置
                 $.clinet_host_weather = 'https://restapi.amap.com'
                 //开化id:330824 ，兰溪:330781 ，松阳:331124
-                $.clinet_CityKey = "331124" ; self.special_navShow = ($.clinet_CityKey != "330781" && $.clinet_CityKey != "331124") 
+                $.clinet_CityKey = "330781" ; self.special_navShow = ($.clinet_CityKey != "330781" && $.clinet_CityKey != "331124") 
                 //key固定
                 $.clinet_GDWeatherKey = "22f5a259075e17d861ee8b04193e1d66" 
 
-                //调整各县融appid和appversion
-                $.clinet_appid = '8a3a171d4405ac4ed05fd00e66e8c059'
-                $.clinet_appversion = '0.0.0'
+                /**
+                    调整各县融appid
+                    0:蓝TV、1:蓝新闻、2:喜欢听、3新蓝云、4青田、5温岭、6 余杭、7武义、8嵊州、9余姚、10龙游、11好易购、12兰溪、13普陀、14 开化、15 政务网、16微信、17 qq 、18微博 19 庆元、20 龙泉、21 云和、22莲都、23永嘉、24象山、25衢江、26遂昌、27缙云、28松阳、29武义村情通、30嵊泗、31青田第三方、32文成、33苍南、34缙云千城、35云和问政、36洞头、37交投、38兑吧、39萧山、40慈溪、41 西湖
+                **/
+                $.clinet_appid = '1028'
+                $.clinet_appversion = '1.1.1'
                 $.clinet_clientid = ''
                 $.clinet_appkey = '65c360936cae4ca634666104788379224984a8c8' 
             }  
@@ -242,24 +245,22 @@
                             }
                         })
                     }else if ( $.allowMachine == 1) {
-                        let url = '/api/v1/wap/appTemplate',
+                        let url = '/api/fusion/model/default',
                         timestamp = (new Date()).getTime()+'',
                         paramJson = {
                             'appId':$.clinet_appid,
                             'version':$.clinet_appversion,
-                            'clientId':$.clinet_clientid,
-                            'ts':timestamp,
-                            'md5': $.MD5($.clinet_appkey+timestamp+$.clinet_appid+$.clinet_clientid+$.clinet_appversion)
+                            'appType':'web'
                         },
                         styleUrl = $.ajaxGlobalUrl +url
                         // styleUrl = '../../static/localData/tmpStyleData.json'//接口通了，要删除掉
-                        self.netWorking(styleUrl,'post',{ 'Content-Type':'application/json' },JSON.stringify(paramJson),(xhr)=>{
+                        self.netWorking(styleUrl,'get',{},paramJson,(xhr)=>{
                             if ( xhr.responseJSON && xhr.responseJSON.code >=200 && xhr.responseJSON.code<400) {
                                 let reponse_data = xhr.responseJSON.data
                                 if ( reponse_data.status) {
-                                    let homeStatus = reponse_data.status.home,
-                                    videoStatus = reponse_data.status.video,
-                                    serviceStatus = reponse_data.status.service
+                                    let homeStatus = reponse_data.status.home || reponse_data.status,
+                                    videoStatus = reponse_data.status.video || reponse_data.status,
+                                    serviceStatus = reponse_data.status.service || reponse_data.status
 
                                     self.trans_data.status = homeStatus
                                     self.status_data_func( self.trans_data.status)
@@ -267,7 +268,7 @@
 
                                 }
                                 if ( reponse_data.tab) {
-                                    let homeTab = reponse_data.tab[0]
+                                    let homeTab = reponse_data.tab
 
                                     self.trans_data.tab = homeTab
                                     self.label_tab_data_func( self.trans_data.tab)
@@ -280,10 +281,13 @@
                                     self.trans_data.navigation = homeNavigation
                                     self.navigation_data_func( self.trans_data.navigation)
                                     self.nav_show = true 
-
                                 }
                                 if ( reponse_data.newsList) {
-                                    self.trans_data.newsList = self.adjustMobileDataInterface( reponse_data.newsList)
+                                    // 老数据结构
+                                    // self.trans_data.newsList = self.adjustMobileDataInterface( reponse_data.newsList)
+
+                                    //新数据结构
+                                    self.trans_data.newsList = reponse_data.newsList
 
                                     self.news_list_recommend_func( self.trans_data.newsList)
                                     self.newslist_show = true
@@ -1666,7 +1670,7 @@
         .pageNow();
         // display: table;
         position: relative;
-        background-color: @pageBg;
+        // background-color: @pageBg;
         width: fit-content;
         // height: @pagebaHeight;
         min-width: @pagebaWidth;

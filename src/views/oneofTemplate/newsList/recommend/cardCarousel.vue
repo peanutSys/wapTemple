@@ -129,7 +129,7 @@
                 let self = this 
                 if ( !cardc_) 
                     return
-                let cardc_common = cardc_[0]
+                let cardc_common = cardc_[0] || cardc_
                 if ( !cardc_common) 
                     return
 
@@ -760,12 +760,13 @@
                     $if.empty()
                     baseData.items.forEach( (item,n)=>{
                         let $it_copy= $it.clone()
-                        $it_copy.find('.image').css('backgroundImage','url('+item.thumb+')')
+                        $it_copy.find('.image').css('backgroundImage','url('+(item.cover && item.cover[0]['path'] || '')+')')
                         $it_copy.find('.title').find('span').text( item.title)
                         $it_copy.data('concrete_data',item)
                         title_arr.push( item.title)
                         $if.append( $it_copy)
                     })
+                    
                     self.interval_card(i,title_arr,'.copy')
                     $if.find('.img-text').on('click',function(){
                         $.click_news_into_particular( $(this).data('concrete_data'))

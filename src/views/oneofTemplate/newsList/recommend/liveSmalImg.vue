@@ -76,7 +76,7 @@
                 let self = this
                 if ( !livec_) 
                     return
-                let remote_ = livec_[0]
+                let remote_ = livec_[0] || livec_
                 if ( !remote_) 
                     return
 
@@ -541,7 +541,8 @@
                     baseData.streams.forEach( (item,n)=>{
                         item.wap_url = item.live_urls[0]['url']
                         let $simg_copy= $simg.clone()
-                        !item.image ? item.image = 'http://shixiantest.oss-cn-hangzhou.aliyuncs.com/48/posts/2020/12/15/0b09f85b0d6b7f73bbea9f6214b3b9c3.png' : null  
+                        item.image = item.cover && item.cover[0]['path'] || ''
+                        // !item.image ? item.image = 'http://shixiantest.oss-cn-hangzhou.aliyuncs.com/48/posts/2020/12/15/0b09f85b0d6b7f73bbea9f6214b3b9c3.png' : null  
                         if ( n== 0) {
                             $img.css('backgroundImage','url('+item.image+')')
                             $img.data('concrete_data',item) 

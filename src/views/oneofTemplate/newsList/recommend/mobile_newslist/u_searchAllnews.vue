@@ -46,7 +46,7 @@
                 @click.stop='cell_click( val)'
                 >
                 <div class="img-father" >
-                    <img :src="val.thumb" class='image'>
+                    <img :src=" val.cover && val.cover[0].path || '' " class='image'>
                 </div>
                 <div class="text-father">
                     <div class='title'>
@@ -54,17 +54,14 @@
                     </div>
                     <div class="tag-time">
                         <div style="display: inline-block;" >
-                            <span class='tag'>{{ val.data_tags && val.data_tags.length >0 ? val.data_tags[0]["tag_name"] : '' }}</span>
+                            <span class='tag'>{{ val.source }}</span>
                         </div>
                         <div style="display: inline-block;" >
                             <span class='time'>{{ getTimeFormatter(val.create_at*1000) }}</span>
                         </div>
                     </div>
                     <div class="read-btn" >
-                        <div class="img">
-                            <img :src="lr_content.readimg">
-                        </div>
-                        <span class='read'>{{ val.hits_fake }}</span>
+                        <span class='read'>{{ val.viewBaseNum +'阅读' }}</span>
                     </div>
                 </div>
             </div>
@@ -142,23 +139,17 @@
                 self.$refs['searchInput'].blur()
 
                 self.page_ = page_ || 1
-                let search_url_ = $.ajaxGlobalUrl +'/api/v1/wap/search',
-                timestamp = (new Date()).getTime()+'',
+                let search_url_ = $.ajaxGlobalUrl +'/api/fusion/es/articles/search',
                 paramJson = {
                     'appId':$.clinet_appid,
-                    'clientId':$.clinet_clientid,
-                    'version':$.clinet_appversion,
-                    'p':self.page_,
-                    'q':self.searchWord,
-                    'size':10,
-                    'ts':timestamp,
-                    'md5': $.MD5($.clinet_appkey+timestamp+$.clinet_appid+$.clinet_clientid+self.page_+self.searchWord+'10'+$.clinet_appversion)
+                    'keywords':self.searchWord,
+                    'page': self.page_
                 }
                 self.searchLoading = !self.lr_content.bloading_begin //搜索loading
-                self.netWorking(search_url_,'post',{'Content-Type':'application/json'},JSON.stringify( paramJson), (xhr)=>{
+                self.netWorking(search_url_,'get',{'Content-Type':'application/json'},paramJson, (xhr)=>{
                     if ( xhr.responseJSON && xhr.responseJSON.code >=200 && xhr.responseJSON.code<400) {
                         let rd = xhr.responseJSON.data || {} ,
-                        lrcd = rd.rs || [] //展示的数据
+                        lrcd = rd.block && rd.block[0] && rd.block[0].items || [] //展示的数据
                         self.show_type = 1 //展示搜索结果  
                         self.page_ > 1 ? self.lr_content.data = self.lr_content.data.concat(lrcd) : self.lr_content.data = lrcd 
                         
@@ -198,18 +189,14 @@
             },
             get_search_data(){
                 let self = this,
-                hot_url_ = $.ajaxGlobalUrl +'/api/v1/wap/searchHot',
+                hot_url_ = $.ajaxGlobalUrl +'/api/fusion/products/getAppHotSearch',
                 timestamp = (new Date()).getTime()+'',
                 paramJson = {
                     'appId':$.clinet_appid,
-                    'clientId':$.clinet_clientid,
-                    'version':$.clinet_appversion,
-                    'ts':timestamp,
-                    'md5': $.MD5($.clinet_appkey+timestamp+$.clinet_appid+$.clinet_clientid+$.clinet_appversion)
                 }
-                self.netWorking(hot_url_,'post',{'Content-Type':'application/json'},JSON.stringify( paramJson), (xhr)=>{
+                self.netWorking(hot_url_,'get',{'Content-Type':'application/json'},paramJson, (xhr)=>{
                     if ( xhr.responseJSON && xhr.responseJSON.code >=200 && xhr.responseJSON.code<400) {
-                        self.hot_search.data = xhr.responseJSON.data || []
+                        self.hot_search.data = xhr.responseJSON.data && xhr.responseJSON.data.hotSearch || []
                     }
                 })
             },

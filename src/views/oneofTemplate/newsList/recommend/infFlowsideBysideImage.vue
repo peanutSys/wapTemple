@@ -100,10 +100,12 @@
 
             let infoimage_data_
             if ( self.type_element == 'bigImage_1401') {
-                infoimage_data_ = (self._props.infoimageData['1401'] && self._props.infoimageData['1401'][0]) || ''
+                let ifdata = self._props.infoimageData['1401']
+                infoimage_data_ = ifdata && ifdata[0] ? ifdata [0] : ( ifdata || '')
                 self.ability_content = 0
             }else if ( self.type_element == 'bigImage_1403') {
-                infoimage_data_ = self._props.infoimageData['1403'] ? self._props.infoimageData['1403'][0] : ''
+                let ifdata = self._props.infoimageData['1403']
+                infoimage_data_ = ifdata && ifdata[0] ? ifdata [0] : ( ifdata || '')
                 self.ability_content = 1
             }
 
@@ -1134,13 +1136,13 @@
                                 $toptag = $cell_copy.find('.source-text').eq(0),
                                 $topread = $cell_copy.find('.read-person').eq(0)
 
-                                $img.css('backgroundImage','url('+item.thumb+')')
+                                $img.css('backgroundImage','url('+(item.cover && item.cover[0]['path'] || '')+')')
                                 $title.text( item.title)
-                                $read.text( item.hits_fake)
-                                $time.text( item.referer_name+' '+self.getTimeFormatter(item.create_at*1000))
-                                $tag.text( item.data_tags && item.data_tags.length >0 ? item.data_tags["tag_name"] : '')
-                                $toptag.text( item.data_tags && item.data_tags.length >0 ? item.data_tags["tag_name"] : '')
-                                $topread.text( item.hits_fake)
+                                $read.text( item.viewBaseNum)
+                                $time.text( self.getTimeFormatter(item.createdAt*1000))
+                                $tag.text( item.tags)
+                                $toptag.text( item.tags)
+                                $topread.text( item.viewBaseNum)
                                 if ( item.duration == 0) {
                                     $durationPackage.css('display','none')
                                 }else{

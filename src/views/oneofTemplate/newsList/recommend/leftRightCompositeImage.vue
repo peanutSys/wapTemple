@@ -67,7 +67,6 @@
             let lrs_data_
             self.type_module_ = self._props.typeids
             $.allowMachine == 1 ? self.pageWidth = $(window).width() : null
-
             if ( self.type_module_ == 'bigImage_220') {
                 lrs_data_ = self._props.lrsingleData['220']
                 self.type_number = 20
@@ -741,18 +740,18 @@
                     $logostatusfather = $tf_copy.find('.logo-status'),
                     $logostatus = $tf_copy.find('.logostatus')
 
-                    $img.css('backgroundImage','url('+baseData.thumb+')')
+                    $img.css('backgroundImage','url('+(baseData.cover && baseData.cover[0]['path'] || '')+')')
                     $title.text( baseData.title)
-                    $tag.text( baseData.data_tags && baseData.data_tags.length >0 ? baseData.data_tags[0]["tag_name"] : '')
+                    $tag.text( '')//baseData.tags
                     //去掉来源
                     // $time.text( (baseData.referer_name || '') +' '+ self.getTimeFormatter(baseData.create_at*1000))
-                    $time.text( self.getTimeFormatter(baseData.create_at*1000) )
-                    $read.find('span').text( (parseInt(baseData.hits_fake) >=10000 ? (parseInt(baseData.hits_fake)/10000).toFixed(2)+'万' : baseData.hits_fake)+'阅读'  )
-                    baseData.liveStatus == 0 ? $logostatusfather.css('display','none') : (function(){
-                        let liveStatus = baseData.liveStatus == 1 ? '预告' :
-                                        baseData.liveStatus == 2 ? '直播' :
-                                        baseData.liveStatus == 3 ? '结束' :
-                                        baseData.liveStatus == 4 ? '回放' : ''
+                    $time.text( baseData.source+ ' '+self.getTimeFormatter(baseData.createdAt*1000) )
+                    $read.find('span').text( (parseInt(baseData.viewBaseNum) >=10000 ? (parseInt(baseData.viewBaseNum)/10000).toFixed(2)+'万' : baseData.viewBaseNum)+'阅读'  )
+                    baseData.live == 0 ? $logostatusfather.css('display','none') : (function(){
+                        let liveStatus = baseData.live == 1 ? '预告' :
+                                        baseData.live == 2 ? '直播' :
+                                        baseData.live == 3 ? '结束' :
+                                        baseData.live == 4 ? '回放' : ''
                         $logostatusfather.css('display','inline-block')
                         $logostatus.text( liveStatus)
                     })()

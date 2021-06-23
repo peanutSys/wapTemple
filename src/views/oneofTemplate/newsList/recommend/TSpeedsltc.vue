@@ -71,7 +71,7 @@
                 let self = this 
                 if ( !tsb_) 
                     return
-                let remote_ = tsb_[0]
+                let remote_ = tsb_[0] || tsb_
                 if ( !remote_) 
                     return
 
@@ -582,10 +582,10 @@
                         $title = $it_copy.find('.title').eq(0),
                         $subtitle = $it_copy.find('.subtitle').eq(0)
 
-                        $img.css('backgroundImage','url('+(item.thumb)+')')
+                        $img.css('backgroundImage','url('+(item.cover && item.cover[0]['path'] || '')+')')
                         $title.text( item.title )
-                        $subtitle.text( item.sub_title)
-                        !item.sub_title ? $title.css('line-height',$img.height()-2+'px') : null
+                        $subtitle.text( item.subTitle)
+                        !item.subTitle ? $title.css('line-height',$img.height()-2+'px') : null
 
                         $it_copy.data('concrete_data',item)
                         $hri.append( $it_copy)

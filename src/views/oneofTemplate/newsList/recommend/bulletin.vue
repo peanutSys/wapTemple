@@ -646,11 +646,11 @@
                     $tag = $bli.eq(i).find('.tag').eq(0),
                     count = 0,
                     setItem = ( item)=>{
-                        let tagContent = item.data_tags && item.data_tags.length >0 ? item.data_tags["tag_name"] : ''
-                        $img.css('backgroundImage','url('+item.thumb+')')
+                        let tagContent = item.tags+' '+item.source
+                        $img.css('backgroundImage','url('+(item.cover && item.cover[0]['path'] || '')+')')
                         $title.text( item.title)
-                        $time.text( self.getTimeFormatter(item.create_at*1000))
-                        $read.text( item.hits_fake)
+                        $time.text( self.getTimeFormatter(item.createdAt*1000))
+                        $read.text( item.viewBaseNum)
                         $blimg.data('concrete_data',item)
                         if ( tagContent) {
                             $tag.text( tagContent) 

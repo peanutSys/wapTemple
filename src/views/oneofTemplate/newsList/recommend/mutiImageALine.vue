@@ -798,16 +798,16 @@
                     $tp_title0.find('.title').text( baseData.title)
                     $tp_title1.find('.title').text( baseData.title)
                     $.each($img,(n)=>{
-                        $img.eq(n).css('backgroundImage','url('+baseData['ext_image_'+(n+1)]+')')
+                        $img.eq(n).css('backgroundImage','url('+(baseData.cover && baseData.cover[0]['path'] || '')+')')
                     })
-                    $tag.text( baseData.data_tags && baseData.data_tags.length >0 ? baseData.data_tags["tag_name"] : '')
-                    $time.text( self.getTimeFormatter(baseData.create_at*1000))
-                    $read.text( baseData.hits_fake)
-                    baseData.liveStatus == 0 ? $status.css('display','none') : (function(){
-                        let liveStatus = baseData.liveStatus == 1 ? '预告' :
-                                        baseData.liveStatus == 2 ? '直播' :
-                                        baseData.liveStatus == 3 ? '结束' :
-                                        baseData.liveStatus == 4 ? '回放' : ''
+                    $tag.text( baseData.tags)
+                    $time.text( self.getTimeFormatter(baseData.createdAt*1000))
+                    $read.text( baseData.viewBaseNum)
+                    baseData.live == 0 ? $status.css('display','none') : (function(){
+                        let liveStatus = baseData.live == 1 ? '预告' :
+                                        baseData.live == 2 ? '直播' :
+                                        baseData.live == 3 ? '结束' :
+                                        baseData.live == 4 ? '回放' : ''
                         $status.css('display','inline-block')
                         $status.text( liveStatus)
                     })()

@@ -61,7 +61,7 @@
                 let self = this
                 if ( !hscreport_) 
                     return
-                let remote_ = hscreport_[0]
+                let remote_ = hscreport_[0] || hscreport_
                 if ( !remote_) 
                     return
 
@@ -479,9 +479,9 @@
                         $title = $it_copy.find('.title').eq(0),
                         $subtitle = $it_copy.find('.subtitle').eq(0)
 
-                        $img.css('backgroundImage','url('+item.thumb+')')
+                        $img.css('backgroundImage','url('+(item.cover && item.cover[0]['path'] || '')+')')
                         $title.text( item.title)
-                        $subtitle.text( item.sub_title)
+                        $subtitle.text( item.subTitle)
 
                         $it_copy.data('concrete_data',item)
                         $hri.append( $it_copy)

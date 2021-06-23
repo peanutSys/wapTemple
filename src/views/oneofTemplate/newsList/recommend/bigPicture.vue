@@ -73,7 +73,7 @@
                     <ImageLayout class='share':layout_data='local_data.shareImg'></ImageLayout>
                 </div>
                 <div class="read-package" v-if = 'type_number !=4 && type_number !=12'>
-                    <ImageLayout class='read-img':layout_data='local_data.readImg'></ImageLayout>
+                    <!-- <ImageLayout class='read-img':layout_data='local_data.readImg'></ImageLayout> -->
                     <LabelLayout class='read-text' :layout_data='local_data.read'></LabelLayout>
                 </div> 
                 <div class="apply-package" v-if = 'type_number ==4 '>
@@ -1270,13 +1270,13 @@
                     $tp_title0.find('.title').text( baseData.title)
                     $tp_title1.find('.title').text( baseData.title)
 
-                    $if_img.css('backgroundImage','url('+baseData.thumb+')')
+                    $if_img.css('backgroundImage','url('+(baseData.cover && baseData.cover[0]['path'] || '')+')')
                     $if_title.text( baseData.title)
-                    baseData.liveStatus == 0 ? $if_first_father.css('display','none') : (function(){
-                        let liveStatus = baseData.liveStatus == 1 ? '预告' :
-                                        baseData.liveStatus == 2 ? '直播' :
-                                        baseData.liveStatus == 3 ? '结束' :
-                                        baseData.liveStatus == 4 ? '回放' : ''
+                    baseData.live == 0 ? $if_first_father.css('display','none') : (function(){
+                        let liveStatus = baseData.live == 1 ? '预告' :
+                                        baseData.live == 2 ? '直播' :
+                                        baseData.live == 3 ? '结束' :
+                                        baseData.live == 4 ? '回放' : ''
                         $if_first_father.css('display','inline-block')
                         $if_first_status.text( liveStatus)
                     })()
@@ -1287,24 +1287,24 @@
                     }else{
                         let now = (new Date()).getTime(),
                         statusText
-                        if (now >= baseData.timelimit_end* 1000 )
+                        if (now >= baseData.endTime* 1000 )
                             statusText = "活动结束"
-                        else if (now >= baseData.timelimit_begin* 1000 )
+                        else if (now >= baseData.startTime* 1000 )
                             statusText = "开始报名"
                         else 
                             statusText = "未开始"
                         $if_sencond_status.text( statusText)
                         $tf_apply.text( statusText)
                     }
-                    $if_sencond_time.text( self.getTimeFormatter(baseData.timelimit_begin*1000)+'~'+self.getTimeFormatter(baseData.timelimit_end*1000))
+                    $if_sencond_time.text( self.getTimeFormatter(baseData.startTime*1000)+'~'+self.getTimeFormatter(baseData.endTime*1000))
 
-                    $tf_tag.text( baseData.data_tags && baseData.data_tags.length >0 ? baseData.data_tags["tag_name"] : '')
-                    $tf_time.text( self.getTimeFormatter(baseData.create_at*1000))
-                    $tf_read.text( baseData.hits_fake)
+                    $tf_tag.text( '') //baseData.tags
+                    $tf_time.text( baseData.source+'  '+self.getTimeFormatter(baseData.createdAt*1000))
+                    $tf_read.find('span').text( (parseInt(baseData.viewBaseNum) >=10000 ? (parseInt(baseData.viewBaseNum)/10000).toFixed(2)+'万' : baseData.viewBaseNum)+'阅读'  )
                     //没有介绍，隐藏掉
                     $tf_intro.text( baseData.intro); !baseData.intro ? $tf_intro.hide():null;
                     //点赞和分享隐藏掉
-                    $tf_like.text( baseData.likes_fake)
+                    $tf_like.text( baseData.viewBaseNum)
                     $tf_copy.find('.like-package').hide()
                     $tf_copy.find('.share-package').hide()
 

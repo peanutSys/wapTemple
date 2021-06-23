@@ -52,10 +52,17 @@
                 self.convertToWeb( val__convert)
 
                 if ( $.allowMachine == 1) {
+
                     self.pagebaWidth = $(window).width()
                     self.getContentData( ()=>{
                         self.setLayout( val__convert,0)
                     })
+
+                    if ( $.allowMachine == 1 && $.navBottombarClick) {
+                        $.navBottombarClick.forEach( (sf)=>{
+                            sf.func( {sort:0})
+                        })
+                    }
                 }else if ( $.allowMachine == 0) {
                     self.setLayout( val__convert,0)
                 }
@@ -104,6 +111,7 @@
                     $fn.children('.content').css( 'borderBottom',0)
                     $fn.children('.content').eq(selectOne).css( 'borderBottom','2px solid '+ltd.select_color)
                 })
+                
                 $.allowMachine == 1 && $.homelabelbarClick && $.homelabelbarClick( self.muti_str[selectOne])
             },
 
@@ -239,15 +247,13 @@
                         'appId':$.clinet_appid,
                         'clientId':$.clinet_clientid,
                         'version':$.clinet_appversion,
-                        'type':type,
-                        'ts':timestamp,
-                        'md5': $.MD5($.clinet_appkey+timestamp+$.clinet_appid+$.clinet_clientid+type+$.clinet_appversion)
+                        'type':type
                     }
                     // let contentUrl = '../../static/localData/tabContentData.json'//接口通了，要删除掉
-                    self.netWorking(url,'post',{'Content-Type':'application/json'},JSON.stringify( paramJson),(xhr)=>{
+                    self.netWorking(url,'get',{'Content-Type':'application/json'}, paramJson,(xhr)=>{
                         if ( xhr.responseJSON && xhr.responseJSON.code >=200 && xhr.responseJSON.code<400) {
                             let reponse_data = xhr.responseJSON.data
-                            self.muti_str = reponse_data.length == 0 ? [''] : reponse_data[0].sub 
+                            self.muti_str = reponse_data.sub || [''] 
 
                             {   
                                 let abandon_indx1 = self.muti_str.findIndex( (item)=>{
@@ -272,7 +278,7 @@
    
                 if ( !$.navBottombarClick) {
                     $.navBottombarClick = []
-                    let url_ = '/api/v1/wap/menu'
+                    let url_ = '/api/fusion/wap/getMenuInfo'
                     let homeNav = {
                         func:( item)=>{
                             if ( item.sort == 0) {

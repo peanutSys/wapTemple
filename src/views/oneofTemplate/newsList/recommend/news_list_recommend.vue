@@ -233,7 +233,7 @@
                     self.nlr = nlr
 
                     if ( nlr['1402']) {
-                        let nlr_1402 = nlr['1402'][0]
+                        let nlr_1402 = nlr['1402'][0] || nlr['1402']
                         self.nlr_1402 = nlr_1402
                         self.show_module.bigImage_200 = $.allowMachine == 1 ? true : !!nlr_1402['200']
                         self.show_module.bigImage_201 = $.allowMachine == 1 ? true : !!nlr_1402['201']
@@ -380,22 +380,22 @@
                     self.tabItemClicked = item
                     self.refreshListpage = page_ || 1
 
-                    let url = $.ajaxGlobalUrl+ '/api/v1/wap/columnsCommon',
+                    let url = $.ajaxGlobalUrl+ '/api/fusion/wap/getChannelsInfo',
                     page = self.refreshListpage,
-                    codeid = self.refreshListpage == 1 ? item.id : item.nextid,
+                    codeid = item.id,
                     timestamp = (new Date()).getTime()+'',
                     paramJson = {
                         'appId':$.clinet_appid,
                         'clientId':$.clinet_clientid,
-                        'code':codeid+'',
+                        'channelId':codeid+'',
                         'version':$.clinet_appversion,
                         'page':page,
-                        'ts':timestamp,
-                        'md5': $.MD5($.clinet_appkey+timestamp+$.clinet_appid+$.clinet_clientid+codeid+page+$.clinet_appversion)
+                        'type': page == 1 ? 'menu' : ''
                     }
+                    item.link && ( item.link.type == 'tv' || item.link.type == 'radio') ? paramJson.type = '' : null
 
                     self.editContentData(null,true)
-                    self.netWorking(url,'post',JSON.stringify( paramJson),(xhr)=>{
+                    self.netWorking(url,'get',paramJson,(xhr)=>{
                         if ( xhr.responseJSON && xhr.responseJSON.code >=200 && xhr.responseJSON.code<400) {
                             let reponse_data = xhr.responseJSON.data
                             //便民服务
@@ -406,8 +406,8 @@
                                self.extra_module.hserviefp.show = false 
 
                             //看电视听广播
-                            if ( reponse_data.type == 29 || reponse_data.type == 30) {
-                                self.extra_module.watchtv.data = reponse_data
+                            if (  item.link && (item.link.type == 'radio' || item.link.type == 'tv')) {
+                                self.extra_module.watchtv.data = item
                                 self.extra_module.watchtv.show = true
                             }else
                                self.extra_module.watchtv.show = false 
@@ -447,10 +447,10 @@
                     new_block = JSON.parse( JSON.stringify( cdata_.block)),
                     count_1402 = 0
                     cdata_.block.forEach( (content,i)=>{
-                        if ( content.type2020 == '1402') {
+                        if ( content.templateStyle == '1402') {
                             content.items.reverse()
                             content.items.forEach( ( item,n)=>{
-                                item.type2020 = item.display_type2020
+                                item.templateStyle = item.templateStyle
                                 new_block.splice(i+count_1402+1,0,item)
                             })
                             count_1402 += content.items.length
@@ -458,9 +458,9 @@
                         }
                     })
                     new_block.forEach( (content,ii)=>{
-                        content.blocktype = cdata_.type
-                        let typeone = content.type2020+'',
-                        groupType = content.title_app_display,
+                        content.blocktype = cdata_.id
+                        let typeone = content.templateStyle+'',
+                        groupType = content.displayTitle,
                         $gatherele = $nl_.children().not('.copy'),
                         $groupHeader = $nl_.children('.groupHeader').not('.copy')
 
@@ -500,7 +500,7 @@
                         let toploading = $nl_.children('.loading-warp'),
                         bottomloading = $nl_.children('.bottom-loading'),
                         nlr_string = JSON.stringify( self.nlr),
-                        nlr_1402_string = JSON.stringify( self.nlr['1402'][0]),
+                        nlr_1402_string = JSON.stringify( self.nlr['1402'][0] || self.nlr['1402']),
                         elep_first_baseData =  elep[0] ? elep[0].data('baseData') : ''
                         toploading.css('display','block')
 
@@ -602,7 +602,7 @@
                 lastIndex = dcblock.length-1
 
                 self.extra_module.bottomloading.loading = true
-                self.tabItemClicked.nextid = dcblock[lastIndex]['id']
+                // self.tabItemClicked.nextid = dcblock[lastIndex]['id']
                 $.homelabelbarClick( self.tabItemClicked,++self.refreshListpage)
             },
             getRandomClassName(){

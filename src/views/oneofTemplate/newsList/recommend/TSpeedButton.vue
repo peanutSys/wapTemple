@@ -79,7 +79,7 @@
                 let self = this 
                 if ( !tsb_) 
                     return
-                let remote_ = tsb_[0]
+                let remote_ = tsb_[0] || tsb_
                 if ( !remote_) 
                     return
 
@@ -445,7 +445,7 @@
                         $img = $it_copy.find('.image').eq(0),
                         $title = $it_copy.find('.title').eq(0)
 
-                        $img.css('backgroundImage','url('+item.thumb+')')
+                        $img.css('backgroundImage','url('+(item.cover && item.cover[0]['path'] || '')+')')
                         $title.text( item.title)
 
                         $it_copy.data('concrete_data',item)

@@ -128,7 +128,7 @@
                 let self = this 
                 if ( !hsc_) 
                     return
-                let hsc_one = hsc_[0]
+                let hsc_one = hsc_[0] || hsc_
                 if ( !hsc_one) 
                     return
 
@@ -823,7 +823,7 @@
                     $it = $if.find('.img-text').eq(0)
                     $if.empty()
                     baseData.items.forEach( (item,n)=>{
-                        let tagContent = item.data_tags && item.data_tags.length >0 ? item.data_tags["tag_name"] : '',
+                        let tagContent = item.tags+' '+item.source,
                         $it_copy= $it.clone(),
                         $img = $it_copy.find('.image').eq(0),
                         $title = $it_copy.find('.title').eq(0),
@@ -833,10 +833,10 @@
                         $durationPackage = $it_copy.find('.duration-package').eq(0),
                         $duration = $it_copy.find('.duration-text').eq(0)
 
-                        $img.css('backgroundImage','url('+item.thumb+')')
+                        $img.css('backgroundImage','url('+(item.cover && item.cover[0]['path'] || '')+')')
                         $title.text( item.title)
-                        $read.text( item.hits_fake)
-                        $time.text( self.getTimeFormatter(item.create_at*1000))
+                        $read.text( item.viewBaseNum)
+                        $time.text( self.getTimeFormatter(item.createdAt*1000))
                         $tag.text( tagContent)
                         if ( item.duration == 0) {
                             $durationPackage.css('display','none')

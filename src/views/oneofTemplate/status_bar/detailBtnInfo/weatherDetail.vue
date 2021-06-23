@@ -69,7 +69,7 @@
         },
         mounted(){
             let self = this
-            self.get_weather_all()
+            self.get_weather_all()          
         },
         methods:{
             get_weather_all(){
@@ -143,7 +143,6 @@
         .all-weather{
             @ab_postion();
             width: @width_100;
-            height: @height_100;
             margin-top: 90px;
             .today-weather{
                 width: @width_100;
@@ -197,9 +196,6 @@
             }
 
         }
-        
-
-
 
     }
 
