@@ -187,6 +187,7 @@
                     title.text.font = hsc_one.title.style.textSize
                     title.text.familyName = hsc_one.title.style.familyName
                     title.text.androidFamilyName = hsc_one.title.style.androidFamilyName
+                    title.textContent_style += '-webkit-line-clamp:'+ ( hsc_one.title.style.numberOfLines || 1) +';'
                 }
                 //设置播放时间
                 let duration_left = 0,duration_bottom = 0 
@@ -834,7 +835,7 @@
                         $duration = $it_copy.find('.duration-text').eq(0)
 
                         $img.css('backgroundImage','url('+(item.cover && item.cover[0]['path'] || '')+')')
-                        $title.text( item.title)
+                        $title.find('span').text( item.title)
                         $read.text( item.viewBaseNum)
                         $time.text( self.getTimeFormatter(item.createdAt*1000))
                         $tag.text( tagContent)
@@ -902,7 +903,7 @@
                     "title":{
                         "textContent":'',
                         "textContentArr":['秋季养生重养肺 应季水果可多吃点','发现“心灵的感冒”','Cabbeen 2018时装发布会'],
-                        "textContent_style":'none',
+                        "textContent_style":'display: -webkit-box;overflow: hidden;text-overflow: ellipsis;-webkit-box-orient: vertical;',
                         "color":{
                             "textColor":"#000000"
                         },

@@ -42,13 +42,17 @@
             </div>
             <NewsListRecommend v-if='wwwc_more' @newsListRecommend='news_list_'></NewsListRecommend>        
         </div>
-    
-        <!-- 底部返回 -->
-        <div class="nav_top">
-            <span class="back" @click='gotoBack'>
-                <img class="back-logo" :src="imgsrc">
-            </span>
+
+        <!-- 看电视、听广播-->
+        <div class="content-detail" v-if='cptype == 8'>
+            <Watchtv :mediaData='tv_radio' @cell_wechat_click='cell_wechat_click'></Watchtv>      
         </div>
+
+        <!-- 底部返回 -->
+        <div class="nav_top" @click.stop ='gotoBack'>
+            <img class="back-logo" :src="imgsrc" >
+        </div>
+        
     </div>
 </template>
 
@@ -59,6 +63,7 @@
     import Classroom from '../oneofTemplate/newsList/recommend/mobile_newslist/u_classroom'
     import SearchAllnews from '../oneofTemplate/newsList/recommend/mobile_newslist/u_searchAllnews'
     import Watchwechat from '../oneofTemplate/newsList/recommend/mobile_newslist/u_watchwechat'
+    import Watchtv from '../oneofTemplate/newsList/recommend/mobile_newslist/u_watchtv';
 
 	export default {
 		data () {
@@ -68,7 +73,7 @@
                 cptype:0, //0:分享页内容，1:列表页内容，2:状态栏中天气详细内容，3:领导集合列表，5：搜索页面，6:看微信，7:看微信更多
 
                 //外链地址
-                imgsrc:require('static/img/backtopre.png'),
+                imgsrc:require('static/img/backtopre2.png'),
                 framesrc:"",
                 videosrc:'',
 
@@ -91,6 +96,9 @@
                 //看新闻“更多”
                 wwwc_more:{}, 
 
+                //看电视、听广播
+                tv_radio:{},
+
 			}
 		},
         watch:{ },
@@ -112,6 +120,7 @@
             Classroom,
             SearchAllnews,
             Watchwechat,
+            Watchtv,
         },
 		methods:{
             setLayout( ){
@@ -119,11 +128,18 @@
 
                 self.$nextTick( ()=>{
                     let $cp = $('.content-parti'+self.getRandomClassName() ),
-                    cd_height = $(window).height() - $cp.find('.nav_top').height()
+                    wWidth = $(window).width(),
+                    wHeight = $(window).height(),
+                    // cd_height = $(window).height() - $cp.find('.nav_top').height()
+                    cd_height = wHeight
 
                     $cp.find('.content-detail').css({
                         height: cd_height + 'px'
                     })
+
+                    setTimeout(function() {
+                        $cp.find('.content-detail').css({ height: cd_height + 'px' })
+                    }, 700)
 
                     if ( self.cptype == 3) {
                         let ldheader_header = $cp.find('.content-detail').find('.cp-leader-gather').height()
@@ -220,6 +236,13 @@
                 }else if ( data_.statusbar_searchbtn == 1) {
                     //搜索
                     self.cptype = 5
+                }else if ( data_.clickMore == 1) {
+                    //更多
+                    self.cptype = 1
+                    self.$nextTick( ()=>{
+                        self.news_list_func && self.news_list_func( $.global_availdata.nlStyle , 'detail')
+                        $.homelabelbarClick( data_)
+                    })
                 }else if ( data_.type == 'broadcast') {
                     //直播
                     self.cptype = 0
@@ -231,26 +254,36 @@
                 }else{
                    self.getNetData('get','/api/fusion/wap/getNewsInfo',{newsId:data_.id,appId:$.clinet_appid } ,( reponse_data)=>{
                         if ( reponse_data.link && reponse_data.link.type == 'newspaper' ||
-                             reponse_data.link && reponse_data.link.type == 'auth_link' 
+                             reponse_data.link && reponse_data.link.type == 'auth_link' ||
+                             reponse_data.link && reponse_data.link.type == 'outer_link'
                             ) {
                             //读报纸等外链
                             self.cptype = 0
                             frame_videoSrc( reponse_data.link.content || '')
                         }else if ( 
                                 reponse_data.link && 
-                                (reponse_data.link.type == 'radio' || 
-                                reponse_data.link.type == 'tv' ) 
+                                ( reponse_data.link.type == 'topic' )  
                             ) { 
-                            //看电视
+                            //专题
                             self.cptype = 1
+                            reponse_data.link.type == 'topic' ? reponse_data.id = reponse_data.link.content : ''
                             self.$nextTick( ()=>{
                                 self.news_list_func && self.news_list_func( $.global_availdata.nlStyle , 'detail')
                                 $.homelabelbarClick( reponse_data)
                             })
+                        }else if ( 
+                                reponse_data.link && 
+                                (reponse_data.link.type == 'radio' || 
+                                reponse_data.link.type == 'tv')  
+                            ) { 
+                            //看电视、听广播
+                            self.cptype = 8
+                            self.tv_radio = reponse_data
                         }else{
                             self.cptype = 0
                             frame_videoSrc( reponse_data.shareUrl || reponse_data.wapUrl)
                         }
+                        
                     })
                      
                 }
@@ -349,19 +382,18 @@
 
 <style scoped lang="less">
     .content-parti{
+        position: relative;
         width: 100%;
         .nav_top{
-            position: relative;
-            height: 50px;
-            background-color: #fff;
-            box-shadow: 0px -2px #efefef;
-            .back{
-                display: inline-block;
-                padding: 15px;
-                .back-logo{
-                    width: 20px;
-                    height: 20px;
-                }
+            position: absolute;
+            bottom: 50px;
+            right: 10px;
+            width: 70px;
+            height: 70px;
+            z-index: 3;
+            .back-logo{
+                width: 100%;
+                height: 100%;
             }  
         }
         .content-detail{

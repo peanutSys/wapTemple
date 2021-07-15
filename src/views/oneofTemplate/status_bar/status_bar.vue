@@ -6,8 +6,7 @@
         <div v-else 
             @click.stop='clicked_insertedNode_or_emptyNode("container",val)'
             :class="val.name+'-ele-container empty-container'" 
-            style="display: inline-block;vertical-align: top;top: 50%;
-            transform: translateY(-50%);position: relative;cursor: pointer;">
+            style="display: inline-block;position: relative;cursor: pointer;">
 
             <SearchBtn 
                 v-if=" val.id.indexOf('search_button') > -1 " 
@@ -674,7 +673,7 @@
         // width: fit-content;
         position: relative;
         width: @pagebaWidth;
-        height: @statusBarHeight;
+        // height: @statusBarHeight;
         position: relative;
         white-space: nowrap;
         cursor: pointer;
@@ -685,10 +684,10 @@
             position: relative;
             color:#fff;
             font-size: 12px;
-            top: 50%;
             border: 1.5px dotted #fff;
             border-radius: 15px;
-            transform: translateY(-50%);
+            // top: 50%;
+            // transform: translateY(-50%);
             cursor: pointer;
             padding: 5px 10px;
             text-align: center;

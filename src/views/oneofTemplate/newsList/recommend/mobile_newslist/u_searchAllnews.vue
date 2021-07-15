@@ -57,7 +57,7 @@
                             <span class='tag'>{{ val.source }}</span>
                         </div>
                         <div style="display: inline-block;" >
-                            <span class='time'>{{ getTimeFormatter(val.create_at*1000) }}</span>
+                            <span class='time'>{{ getTimeFormatter(val.createdAt*1000) }}</span>
                         </div>
                     </div>
                     <div class="read-btn" >

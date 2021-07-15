@@ -1,14 +1,17 @@
 <template>
     <div :class='"grouph-header "+randomMark' @click.stop='edit_json_style("1")'>
+        <div class="img-father">
+            <ImageLayout class='image':layout_data='local_data.mainImage'></ImageLayout>
+        </div>
         <div class="text-father">
             <div class="title-father">
                 <LabelLayout class='title' :layout_data='local_data.title' ></LabelLayout>
             </div>
             <div class="more-btn" >
                 <LabelLayout class='more' :layout_data='local_data.more'></LabelLayout>
-                <div class="img">
+                <!-- <div class="img">
                     <img src="../../../../../static/img/nextone.png">
-                </div>
+                </div> -->
             </div>
         </div>
         <!-- <ViewLayout class='line' :layout_data='local_data.line'></ViewLayout> -->
@@ -98,6 +101,9 @@
                 {   
                     cell_height = remote_.height
                 }
+                //设置图片
+                let img_left = 0,img_top = 0 ,img_right = 0, img_width = 0
+
                 //设置标题
                 let title_left = 0,title_top = 0 ,title_right = 0
                 {   
@@ -138,7 +144,12 @@
                     gh_.css({
                         padding:padding_,
                         height:cell_height+'px',
-                    })                    
+                    }) 
+                    //文本区域宽度
+                    gh_.find('.text-father').css({
+                        width: $(window).width() - img_width - padding_left -padding_right + 'px'
+                    })    
+                                   
                 })
 
                 //持有外部json数据
@@ -352,9 +363,10 @@
                             $bli.data('refresData',false)
                             let j_ = JSON.parse( $bli.data('contentData'))
                             j_ = j_['groupHeader']
-                            // self.convertToWeb( j_)
-                            // self.setLayout( j_)
+            
                             self.dom_operator_content()
+                            self.convertToWeb( j_)
+                            self.setLayout( j_)
                         }
                         self.getDataRedraw()
                     }, 200);
@@ -369,17 +381,25 @@
                 $.each($bli,(i)=>{
                     let baseData = JSON.parse( $bli.eq(i).data('baseData')),
                     $ghimg = $bli.eq(i),
+                    $image = $bli.eq(i).find('.img-father').find('.image').eq(0),
                     $title = $bli.eq(i).find('.title').eq(0),
                     $moreBtn = $bli.eq(i).find('.more-btn').eq(0)
 
-                    $title.text( baseData.name)
-                    $moreBtn.css('display','none')
-                    
-                    // $bli.eq(i).off('click').on('click',function(){
-                    //     $.click_news_into_particular( $(this).data('concrete_data'))
-                    // })
+                    $image.css({
+                        'backgroundImage' :'url('+(baseData.cover || '')+')',
+                        'display': baseData.cover ? 'inline-block' : 'none'
+                    })
+                    $title.text( baseData.name) 
+
+                    baseData.displayTitle == 0 ? $title.css('display','none') : null
+                    baseData.displayMore == 0 ? $moreBtn.css('display','none') : null
+                
+                    $moreBtn.off('click').on('click',function(){
+                        baseData.clickMore = 1
+                        $.click_news_into_particular( baseData)
+                    })
                 })
-                $bli.css('display','block')
+                $bli.css('display','flex')
             },
 
             getRandomClassName(){
@@ -389,6 +409,21 @@
 
             getlocalData(){
                 return {
+                    "mainImage":{
+                        "imgUrl":'http://img01.cztv.com/201606/20/1911554b9c17efcd0325f2a73566d552.jpg',
+                        "imgFill":"cover",
+                        "common":{
+                            "border": {
+                                "borderColor": "#fff", 
+                                "borderWidth": 0, 
+                                "borderRadius": 3 
+                            },
+                            "size":{
+                                "width":60,
+                                "height":35
+                            },
+                        }
+                    },
                     "title":{
                         "textContent":'推荐内容',
                         "textContent_style":'none',
@@ -438,16 +473,25 @@
     @import '../../publicStyle';
     @contentbg:#fff;
     .grouph-header{
+        position: relative;
+        display: flex;
+        justify-content: left;
+        align-items: center;
         width: 100%;
         height: 30px;
-        position: relative;
         white-space: pre-wrap;
         overflow: hidden;
         background-color: @contentbg;
+        .img-father{
+            display: inline-block;
+            position: relative;
+            .image{
+                // display: none;
+            }
+        }
         .text-father{
             position: relative;
-            top: 50%;
-            transform: translateY(-50%);
+            display: inline-block;
             padding: 5px 0;
             .title-father{
                 display: inline-block;
@@ -460,6 +504,7 @@
                 font-size: 0;
                 top: 50%;
                 transform: translateY(-50%);
+                padding-left: 30px;
                 .more{
                     vertical-align: middle;
                 }

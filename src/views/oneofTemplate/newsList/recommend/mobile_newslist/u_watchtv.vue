@@ -1,14 +1,12 @@
 <template>
     <div class="tv-radio">
         <div class="video-div">
-            <video id="live_video" class="video video-js vjs-default-skin vjs-big-play-centered" preload="meta" controls playsinline="true" controlslist="nodownload" disablePictureInPicture></video>
-            <div class="radio-logo" v-if= 'tv_radio_show == 1'>
-                <div class="title-logo">
-                    <img class="logo" :src="live_programCell.logo">
-                    <span class="title">{{live_programCell.name}}</span>
-                </div>
-            </div>                                   
+            <video id="live_video" class="video video-js vjs-default-skin vjs-big-play-centered" preload="meta" controls playsinline="true" poster="http://shixiantest.oss-cn-hangzhou.aliyuncs.com/48/posts/2021/01/18/7a7afb340b076d063abdfd5f53f0a729.png" controlslist="nodownload" disablePictureInPicture></video>
             
+            <div class="title-logo" v-if= 'tv_radio_show == 1'>
+                <img class="logo" :src="live_programCell.logo">
+                <span class="title">{{live_programCell.name}}</span>
+            </div>                                   
         </div>
         <div class="live-replay">
             <div 
@@ -95,7 +93,7 @@
                 dateLoading:false,
 
                 //点击的颜色
-                select_color : '#3FB14F',
+                select_color : 'rgb(0, 147, 221)',
 
                 //直播、点播
                 liveReplayinfoArr:[],
@@ -112,16 +110,6 @@
         watch:{
             mediaData:function(n){
                 let self = this
-                // if ( n.link.type == 'tv') {
-                //     //看电视
-                //     self.tv_radio_show = 0
-                //     self.live_playback_click( 0)
-                    
-                // }else if ( n.link.type == 'radio') {
-                //     //听广播
-                //     self.tv_radio_show = 1
-                //     self.get_media_data( 0,0)
-                // }
             },
             
         },components:{},
@@ -215,7 +203,6 @@
             //获取节目单列表
             get_programlist(){
                 let self = this 
-
                 self.live_programCell = {
                     list: self.programList.list,
                     station_date: self.programList.date,
@@ -261,7 +248,7 @@
                 self.live_programKey = (new Date()).getTime()+''
                 
                 let streamUrls = self.liveReplayinfoCurrent.streamUrls
-                let url_f= streamUrls[ streamUrls.length-1].url,
+                let url_f= streamUrls[0].url,
                 url_p = (item.playTime) + ','+ (item.playTime+self.get_millisecond( item.duration))
                 self.live_programUrl = url_f+'/'+url_p
 
@@ -281,7 +268,11 @@
                     let ob_url = {
                         src: self.live_programUrl,
                         type :'application/x-mpegURL' 
-                    } //hls的是mpeg ts流,type为'application/x-mpegURL'。rtmp的是type：'rtmp/flv'
+                    }, //hls的是mpeg ts流,type为'application/x-mpegURL'。rtmp的是type：'rtmp/flv'
+                    hideVideoframe = ( )=>{
+                        //播放广播时，隐藏视频帧
+                        $('.video-div').find('.vjs-poster').css('display','block')
+                    }
                     !self.videoplayer ? self.videoplayer = videojs('live_video',{
                         playbackRates: [0.5,1,1.5,2,4],
                         fingerpId:self.fingerpId,
@@ -290,9 +281,11 @@
                     },function () {
                         this.src( ob_url)
                         this.play()
+                        self.tv_radio_show == 1 ? setTimeout(function() { hideVideoframe()}, 500) : null
                     }) : (function(){
                         self.videoplayer.src( ob_url)
                         self.videoplayer.play()
+                        self.tv_radio_show == 1 ? setTimeout(function() { hideVideoframe()}, 500) : null
                     }())
                     console.log( ob_url)
                 }
@@ -422,24 +415,12 @@
                 .operator > .width(100%);
                 .operator > .height(100%);
             }
-            .radio-logo{
+            .title-logo{
                 position: absolute;
-                left: 0;
-                top: 0;
-                // bottom: 0;
-                // right: 0;
-                // margin: auto;
-                background: url('http://shixiantest.oss-cn-hangzhou.aliyuncs.com/48/posts/2021/01/18/7a7afb340b076d063abdfd5f53f0a729.png');
-                .operator > .width(100%);
-                .operator > .height(100%);
-                .title-logo{
-                    position: relative;
-                    top: 50%;
-                    transform:translateY(-50%);
-                    text-align: center;
-                }
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%,-50%);
                 .logo{
-                    
                     width: 50px;
                     vertical-align: middle;
                 }

@@ -380,6 +380,7 @@
                     self.tabItemClicked = item
                     self.refreshListpage = page_ || 1
 
+                    //列表数据
                     let url = $.ajaxGlobalUrl+ '/api/fusion/wap/getChannelsInfo',
                     page = self.refreshListpage,
                     codeid = item.id,
@@ -392,9 +393,11 @@
                         'page':page,
                         'type': page == 1 ? 'menu' : ''
                     }
-                    item.link && ( item.link.type == 'tv' || item.link.type == 'radio') ? paramJson.type = '' : null
+
+                    item.link && ( item.link.type == 'topic') || item.clickMore ? paramJson.type = '' : null
 
                     self.editContentData(null,true)
+
                     self.netWorking(url,'get',paramJson,(xhr)=>{
                         if ( xhr.responseJSON && xhr.responseJSON.code >=200 && xhr.responseJSON.code<400) {
                             let reponse_data = xhr.responseJSON.data
@@ -405,12 +408,8 @@
                             }else
                                self.extra_module.hserviefp.show = false 
 
-                            //看电视听广播
-                            if (  item.link && (item.link.type == 'radio' || item.link.type == 'tv')) {
-                                self.extra_module.watchtv.data = item
-                                self.extra_module.watchtv.show = true
-                            }else
-                               self.extra_module.watchtv.show = false 
+                            //看电视、听广播
+                            self.extra_module.watchtv.show = false 
 
                             //外链链接
                             if ( reponse_data.type == 23 || reponse_data.type == 34) {
@@ -429,6 +428,24 @@
                             if ( item.id_wchat == 'more') {
                                 reponse_data.block && reponse_data.block.length >0 && ( reponse_data.block[0]['type2020'] ? null : reponse_data.block[0]['type2020'] = 1402)
                             }
+
+                            //菜单按钮
+                            reponse_data.block && reponse_data.block.length >0 ? function(){
+                                let rblock = reponse_data.block
+                                rblock.forEach( (rbcell)=>{
+                                    if ( rbcell.templateStyle == 1301 && rbcell.items.length > 0) {
+                                        let rbcellItems = rbcell.items,
+                                        rbcIndex = rbcellItems.findIndex( (scell)=>{
+                                            return scell.link && scell.link.type == 'tip-off'
+                                        }),
+                                        rbc2Index = rbcellItems.findIndex( (scell)=>{
+                                            return scell.link && scell.link.type == 'newspaper'
+                                        })
+                                        rbcIndex > -1 ? rbcellItems.splice( rbcIndex,1) : null
+                                        rbc2Index > -1 ? rbcellItems.splice( rbc2Index,1) : null
+                                    }
+                                })
+                            }() :''
 
                             self.refreshListdata = reponse_data
                             self.editContentData( reponse_data)

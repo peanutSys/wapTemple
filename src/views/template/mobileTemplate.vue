@@ -138,20 +138,21 @@
             $.allowMachine = 1//是否网页调节样式: 0是预览操作,1是wap数据展示
 
             touch.config.tap = false; //配置手势事件
+            document.title = '样式配置'
 
             //可变配置项
             if ( $.allowMachine == 1) 
             {
                //设置标题；开花好地方、兰精灵、掌上松阳
-                document.title = '兰精灵'
+                document.title = '掌上松阳'
 
                 //全局访问地址
-                $.ajaxGlobalUrl = '' //http://10.30.10.158
+                $.ajaxGlobalUrl = 'https://proxy.cztvcloud.com' //http://10.30.10.158
 
                 //allowMachine等于1时，天气配置
                 $.clinet_host_weather = 'https://restapi.amap.com'
                 //开化id:330824 ，兰溪:330781 ，松阳:331124
-                $.clinet_CityKey = "330781" ; self.special_navShow = ($.clinet_CityKey != "330781" && $.clinet_CityKey != "331124") 
+                $.clinet_CityKey = "331124" ; self.special_navShow = ($.clinet_CityKey != "330781" && $.clinet_CityKey != "331124") 
                 //key固定
                 $.clinet_GDWeatherKey = "22f5a259075e17d861ee8b04193e1d66" 
 
@@ -972,7 +973,7 @@
                         //分割线类型
                         item_arr[2] = { id:'4',content:{name:'newsList.tsb.underline',data:{select:data.mpid,content:[{label:'1',text:'短线'},{label:'2',text:'长线'}] } ,title:'下分割线',difference:difference} }
                         //整体高度
-                        item_arr[3] = { id:'3',content:{name:'newsList.tsb.cell_height',data:data.cell_height ,title:'整体宽度',difference:difference} }
+                        item_arr[3] = { id:'3',content:{name:'newsList.tsb.cell_height',data:data.cell_height ,title:'整体高度',difference:difference} }
                         
                         // item3 = { id:'3',content:{name:'newsList.tsb.imgtext_width',data:data.imgtext_width ,title:'(每个集合)宽度',difference:difference} }
                         

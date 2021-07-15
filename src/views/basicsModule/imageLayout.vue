@@ -41,7 +41,7 @@
                 if ( all_d.imgFill) {
                     stystrr += self.getStr('background-size',all_d.imgFill);
                 }else{
-                    stystrr += self.getStr('background-size','cover');
+                    stystrr += self.getStr('background-size','100% 100%');
                 }
 
                 if ( all_d.common) {

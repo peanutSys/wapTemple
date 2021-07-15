@@ -91,8 +91,8 @@
                     return
                 let local_style_data = self.getlocalData(),
                 si_ = $('.blet-image'+self.getRandomClassName() ),
-                remote_ = self.type_module_ == 'bigImage_1001' ? blet_['1001'][0] : blet_['1002'][0]
- 
+                remote_ = self.type_module_ == 'bigImage_1001' ? blet_['1001'] : blet_['1002']
+                
                 if ( !remote_) 
                     return
                 //整体高度
@@ -146,6 +146,7 @@
                     title.text.font = remote_title.style.textSize
                     title.text.familyName = remote_title.style.familyName
                     title.text.androidFamilyName = remote_title.style.androidFamilyName
+                    title.textContent_style += '-webkit-line-clamp:'+ ( remote_title.style.numberOfLines || 1) +';'
 
                     if ( remote_title.layout) {
                         if ( remote_title.layout.left) {
@@ -247,7 +248,7 @@
                     self.type_module_ == 'bigImage_1001' ? si_.children('.text-father').children('.title-father').css({
                         position:'relative',
                         top:'50%',
-                        transform:'translateY(-50%)'
+                        transform:'translateY(-50%)',
                     }) :null
 
                     //设置标题外边距
@@ -646,9 +647,14 @@
                     $tag = $bli.eq(i).find('.tag').eq(0),
                     count = 0,
                     setItem = ( item)=>{
+                        if ( !item) {
+                            $img.css('display','none')
+                            $title.css('display','none')
+                            return
+                        }
                         let tagContent = item.tags+' '+item.source
-                        $img.css('backgroundImage','url('+(item.cover && item.cover[0]['path'] || '')+')')
-                        $title.text( item.title)
+                        $img.css('backgroundImage','url('+(item.columnCover || '')+')')
+                        $title.find('span').text( item.title)
                         $time.text( self.getTimeFormatter(item.createdAt*1000))
                         $read.text( item.viewBaseNum)
                         $blimg.data('concrete_data',item)
@@ -663,6 +669,7 @@
                     clearInterval(self.timer_roll);
                     self.timer_roll = setInterval(function(){
                         let item = baseData.items[count]
+                        item.columnCover = baseData.cover
                         count == baseData.items.length-1 ? count = 0 : ++count
                         setItem( item)
                     },3000)
@@ -710,7 +717,7 @@
                     },
                     "title":{
                         "textContent":'国庆跑了3小时高速，要不要去服务区给发动机散热',
-                        "textContent_style":'none',
+                        "textContent_style":'display: -webkit-box;overflow: hidden;text-overflow: ellipsis;-webkit-box-orient: vertical;', 
                         "color":{
                             "textColor":"#000000",
                         },
@@ -775,7 +782,7 @@
                         },
                         "common":{
                             "size":{
-                                "height":2
+                                "height":1
                             },
                         }
                     }

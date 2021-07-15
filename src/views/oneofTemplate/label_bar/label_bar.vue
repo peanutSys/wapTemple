@@ -257,19 +257,9 @@
 
                             {   
                                 let abandon_indx1 = self.muti_str.findIndex( (item)=>{
-                                    return item.type == 26 
+                                    return item.type == 'subscription' 
                                 })
                                 abandon_indx1 > -1 ? self.muti_str.splice( abandon_indx1,1) : null
-
-                                let abandon_indx2 = self.muti_str.findIndex( (item)=>{
-                                    return item.type == 137 
-                                })
-                                abandon_indx2 > -1 ? self.muti_str.splice( abandon_indx2,1) : null
-
-                                let abandon_indx3 = self.muti_str.findIndex( (item)=>{
-                                    return item.type == 77 
-                                })
-                                abandon_indx3 > -1 ? self.muti_str.splice( abandon_indx3,1) : null
                             }
                         }
                         cb && cb()
@@ -358,7 +348,7 @@
                         // },
                         "size": {
                             "min-width": 26,
-                            "height":28,
+                            "height":40,
                         },
                     },
                 }
@@ -413,7 +403,7 @@
         background-color: #fff;  
         cursor: pointer;
         .content{
-            margin-right: 34px;
+            margin-right: 30px;
             &:nth-of-type(1){
                 margin-left: 10px;
             }

@@ -66,7 +66,7 @@
                     //文字排列方式
                     common_stystrr += self.getStr('text-align',all_d.text.textAlignment == 0 ? 'left' : all_d.text.textAlignment == 1 ? 'center' :'right'   );
                     common_stystrr += self.getStr('font-size',all_d.text.font+'px');
-                    common_stystrr += self.getStr('font-family',all_d.text.familyName || '');
+                    // common_stystrr += self.getStr('font-family',all_d.text.familyName || '');
                 }
 
                 common_stystrr += self.getStr('width',self.img_width+'px');

@@ -4,7 +4,7 @@
             <ImageLayout class='image':layout_data='local_data.mainImage'></ImageLayout>
         </div>
         <div class="text-father">
-            <div style="display: inline-block;" >
+            <div  class="title-package" style="display: inline-block;" >
                 <div class="logo-status" v-if='type_number == 40 '>
                     <ImageLayout class='logo':layout_data='local_data.logo '></ImageLayout>
                     <LabelLayout class='logostatus' :layout_data='local_data.logostatus' ></LabelLayout>
@@ -134,9 +134,10 @@
                         size[1] && parseFloat( size[1]) >= 0 ? main_image.common.size.height = size[1] :null
                         main_image.common.border.borderRadius = lrs_.img.child.radius
                     } 
+                    self.type_number == 40 ? main_image.common.size.height = 'auto' : null
                 }
                 //设置标题
-                let title_left = 0,title_top = 0 ,title_right = 0
+                let title_left = 0,title_top = 0 ,title_right = 0,title_bottom = (self.type_number == 40 ? 25 : 0)
                 {
                     let title = local_style_data.title
                     title.color.textColor = lrs_.title.style.textColor
@@ -159,7 +160,7 @@
                     }
                 }
                 //设置阅读量
-                let read_right = 0,read_bottom = 2 
+                let read_right = 0,read_bottom = -4 
                 {
                     let read = local_style_data.read
                     read.color.textColor = lrs_.read.style.textColor
@@ -178,7 +179,7 @@
                     }
                 }
                 //设置标签
-                let tag_left = 0,tag_bottom = 0 
+                let tag_left = 0,tag_bottom = -4 
                 {
                     let tag = local_style_data.tag
                     tag.color.textColor = lrs_.tag.style.textColor
@@ -220,9 +221,9 @@
                     })
 
                     let which_platform = navigator.userAgent.indexOf('indow') > -1 ? 'wins' : 'mac'
-                    let distance__textFather = which_platform == 'wins' ? 25 : 10
+                    let distance__textFather = (self.type_number == 40 ? 0 : 15)
                     si_.children('.text-father').css({
-                        'height':local_style_data.mainImage.common.size.height,
+                        'height': local_style_data.mainImage.common.size.height,
                         'width':self.pageWidth-padding_left-padding_right-parseFloat(img_width)-distance__textFather+'px',
                         marginLeft: self.type_number == 20 ? '15px': 0,
                         marginRight: self.type_number == 21 ? distance__textFather+'px': 0
@@ -230,7 +231,7 @@
 
                     //设置标题外边距
                     si_.children('.text-father').find('.title').css({
-                        margin: title_top+'px ' +title_right+'px '+'0 '+title_left+'px'
+                        margin: title_top+'px ' +title_right+'px '+title_bottom+'px '+title_left+'px'
                     })
 
                     //设置阅读量布局
@@ -241,7 +242,7 @@
 
                     //设置标签
                     si_.children('.text-father').children('.text-tag-time').css({
-                        bottom: parseFloat(tag_bottom)+1+'px'
+                        bottom: parseFloat(tag_bottom)+'px'
                     })
                     si_.children('.text-father').children('.text-tag-time').find('.tag').css({
                         margin: '0 0 0 ' +tag_left+'px'
@@ -712,14 +713,14 @@
                             }
                             self.convertToWeb( j_)
                             self.setLayout( j_)
-                            self.dom_operator_content()
+                            self.dom_operator_content( j_)
                         }
                         self.getDataRedraw()
                     }, 200);
                 }
             },
             //直接操作dom
-            dom_operator_content(){
+            dom_operator_content( j_){
                 let self = this,
                 $bli = $('.single-image'+self.getRandomClassName()+'.copy' )
 
@@ -743,9 +744,18 @@
                     $img.css('backgroundImage','url('+(baseData.cover && baseData.cover[0]['path'] || '')+')')
                     $title.text( baseData.title)
                     $tag.text( '')//baseData.tags
-                    //去掉来源
-                    // $time.text( (baseData.referer_name || '') +' '+ self.getTimeFormatter(baseData.create_at*1000))
-                    $time.text( baseData.source+ ' '+self.getTimeFormatter(baseData.createdAt*1000) )
+                    
+                    let publishSpace = ( (new Date()).getTime() - baseData.createdAt*1000 )/1000,
+                    publishText = ''
+                    publishSpace < 180 ? publishText = '刚刚' :
+                    publishSpace >= 180 && publishSpace < 3600 ? publishText = ( parseInt( publishSpace/60)+'分钟前') :
+                    publishSpace >= 3600 && publishSpace < 24*3600 ? publishText = self.getTimeFormatter(baseData.createdAt*1000,'day') :
+                    publishSpace >= 24*3600 && publishSpace < 24*3600*365 ? publishText = self.getTimeFormatter(baseData.createdAt*1000,'month') :
+                    publishSpace >= 24*3600*365 ? publishText = self.getTimeFormatter(baseData.createdAt*1000,'year') : ''
+
+                    //来源、时间
+                    $time.find('span').text( ( j_.referer && j_.referer.style.visible == 0) || !baseData.source ? publishText : baseData.source+ '    '+ publishText)
+                    
                     $read.find('span').text( (parseInt(baseData.viewBaseNum) >=10000 ? (parseInt(baseData.viewBaseNum)/10000).toFixed(2)+'万' : baseData.viewBaseNum)+'阅读'  )
                     baseData.live == 0 ? $logostatusfather.css('display','none') : (function(){
                         let liveStatus = baseData.live == 1 ? '预告' :
@@ -770,15 +780,23 @@
                 $bli.css('display','block')
             },
             //时间戳--获取时间格式
-            getTimeFormatter( date_ ){
+            getTimeFormatter( date_ ,type){
                 let date = new Date( date_ )
                 let M = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1
                 let D = date.getDate() < 10 ? '0'+date.getDate() : date.getDate()
                 let H = date.getHours() < 10 ? '0'+date.getHours() : date.getHours()
                 let m = date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes()
                 let S = date.getSeconds() < 10 ? '0'+date.getSeconds() : date.getSeconds()
-                return date.getFullYear()+'-'+M+'-'+D
-                // return date.getFullYear()+'-'+M+'-'+D+' '+H+':'+m+':'+S
+                if ( type == 'all') 
+                    return date.getFullYear()+'-'+M+'-'+D+' '+H+':'+m+':'+S
+                else if ( type == 'year') 
+                    return date.getFullYear()+'-'+M+'-'+D
+                else if ( type == 'month') 
+                    return M+'-'+D
+                else if ( type == 'day') 
+                    return H+':'+m
+                else
+                    return date.getFullYear()+'-'+M+'-'+D
             },
             getRandomClassName(){
                 let self = this
@@ -812,7 +830,7 @@
                             "textAlignment":0,
                             "font":15,
                             "familyName":"",
-                        },
+                        }
                     },
                     "tag":{
                         "textContent":'热点',
@@ -862,7 +880,7 @@
                     //直播状态
                     "logo":{
                         "imgUrl":'http://shixiantest.oss-cn-hangzhou.aliyuncs.com/48/posts/2020/11/03/344b93fef7622f36d8ff2eaf88e92415.png',
-                        "imgFill":'cover',
+                        "imgFill":'100% 100%',
                         "common":{
                             "size":{
                                 "width":10,

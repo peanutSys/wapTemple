@@ -557,7 +557,7 @@
                     index = 0,
                     imgtArr = [],
                     initialPosition = 0,
-                    move_width = $content_if.find(".img-text").width()
+                    move_width = $content_if.find(".img-text").width() + 10
 
                     $content_if.find(".img-text.tmp").remove()
                     contentArr.forEach( (item,m)=>{
@@ -620,7 +620,7 @@
 
                         //视频索引
                         let lmilength = self.local_data.mainImage.imgUrlArr.length
-                        im != 0 ? $cc_.find(".video-page-control").animate({'left': im*self.pageWidth/lmilength+'px' },500) : $cc_.find(".video-page-control").css({left:0})
+                        im != 0 ? $cc_.find(".video-page-control").animate({'left': im*(self.pageWidth/lmilength)+'px' },500) : $cc_.find(".video-page-control").css({left:0})
                     }
                 }
                 inerval_rotate( $cc_,interid )
@@ -767,7 +767,7 @@
                         $if.append( $it_copy)
                     })
                     
-                    self.interval_card(i,title_arr,'.copy')
+                    self.interval_card(i,title_arr,'.copy',self.type_number != 4 && self.type_number != 5 )
                     $if.find('.img-text').on('click',function(){
                         $.click_news_into_particular( $(this).data('concrete_data'))
                     })
@@ -911,6 +911,7 @@
                 position: relative;
                 text-align: center;
                 vertical-align: middle;
+                margin: 0 5px;
                 .image{
                     display: inline-block;
                 }

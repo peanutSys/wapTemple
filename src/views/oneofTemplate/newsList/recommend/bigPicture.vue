@@ -1229,14 +1229,14 @@
                             self.convertSpecialToNormal( j_,'shadowColor')
                             self.convertToWeb( j_)
                             self.setLayout( j_)
-                            self.dom_operator_content()
+                            self.dom_operator_content( j_)
                         }
                         self.getDataRedraw()
                     }, 200);
                 }
             },
             //直接操作dom
-            dom_operator_content(){
+            dom_operator_content( j_){
                 let self = this,
                 $bli = $('.big-image'+self.getRandomClassName()+'.copy' )
 
@@ -1254,6 +1254,7 @@
                     $if_first_father = $if_copy.find('.logo-status-takePart.first'),
                     $if_sencond_father = $if_copy.find('.logo-status-takePart.sencond'),
                     $if_first_status = $if_copy.find('.logo-status-takePart.first').find('.status'),
+                    $if_first_logo = $if_copy.find('.logo-status-takePart.first').find('.logo'),
                     $if_first_takePart = $if_copy.find('.logo-status-takePart.first').find('.takePart'),
                     $if_sencond_status = $if_copy.find('.logo-status-takePart.sencond').find('.status'),
                     $if_sencond_time = $if_copy.find('.logo-status-takePart.sencond').find('.time'),
@@ -1274,15 +1275,21 @@
                     $if_title.text( baseData.title)
                     baseData.live == 0 ? $if_first_father.css('display','none') : (function(){
                         let liveStatus = baseData.live == 1 ? '预告' :
-                                        baseData.live == 2 ? '直播' :
+                                        baseData.live == 2 ? '直播中' :
                                         baseData.live == 3 ? '结束' :
                                         baseData.live == 4 ? '回放' : ''
                         $if_first_father.css('display','inline-block')
-                        $if_first_status.text( liveStatus)
+                        $if_first_status.find('span').text( liveStatus)
+
+                        if ( baseData.live != 2) {
+                            $if_first_takePart.css('display','none') //参加人数隐藏
+                            $if_first_logo.css('display','none') //图标隐藏
+                        }else
+                            $if_first_takePart.find('span').text( baseData.viewBaseNum+'人参与')
                     })()
-                    $if_first_takePart.text( baseData.hits_fake+'人参与')
+                    
                     if ( baseData.is_signup == 1) {
-                        $if_sencond_status.text( '已报名')
+                        $if_sencond_status.find('span').text( '已报名')
                         $tf_apply.text( '已报名')
                     }else{
                         let now = (new Date()).getTime(),
@@ -1293,13 +1300,24 @@
                             statusText = "开始报名"
                         else 
                             statusText = "未开始"
-                        $if_sencond_status.text( statusText)
+                        $if_sencond_status.find('span').text( statusText)
                         $tf_apply.text( statusText)
                     }
                     $if_sencond_time.text( self.getTimeFormatter(baseData.startTime*1000)+'~'+self.getTimeFormatter(baseData.endTime*1000))
 
                     $tf_tag.text( '') //baseData.tags
-                    $tf_time.text( baseData.source+'  '+self.getTimeFormatter(baseData.createdAt*1000))
+                    
+                    let publishSpace = ( (new Date()).getTime() - baseData.createdAt*1000 )/1000,
+                    publishText = ''
+                    publishSpace < 180 ? publishText = '刚刚' :
+                    publishSpace >= 180 && publishSpace < 3600 ? publishText = ( parseInt( publishSpace/60)+'分钟前') :
+                    publishSpace >= 3600 && publishSpace < 24*3600 ? publishText = self.getTimeFormatter(baseData.createdAt*1000,'day') :
+                    publishSpace >= 24*3600 && publishSpace < 24*3600*365 ? publishText = self.getTimeFormatter(baseData.createdAt*1000,'month') :
+                    publishSpace >= 24*3600*365 ? publishText = self.getTimeFormatter(baseData.createdAt*1000,'year') : ''
+
+                    //来源、时间
+                    $tf_time.text( ( j_.referer && j_.referer.style.visible == 0) || !baseData.source ? publishText : baseData.source+ '    '+ publishText )
+
                     $tf_read.find('span').text( (parseInt(baseData.viewBaseNum) >=10000 ? (parseInt(baseData.viewBaseNum)/10000).toFixed(2)+'万' : baseData.viewBaseNum)+'阅读'  )
                     //没有介绍，隐藏掉
                     $tf_intro.text( baseData.intro); !baseData.intro ? $tf_intro.hide():null;
@@ -1318,19 +1336,27 @@
                         $.click_news_into_particular( baseData)
                     })
                 })
-                $bli.find('.logo-status-takePart').css('display','none') //将状态隐藏掉
+                // $bli.find('.logo-status-takePart').css('display','none') //将状态隐藏掉
                 $bli.css('display','block')
             },
             //时间戳--获取时间格式
-            getTimeFormatter( date_ ){
+            getTimeFormatter( date_ ,type){
                 let date = new Date( date_ )
                 let M = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1
                 let D = date.getDate() < 10 ? '0'+date.getDate() : date.getDate()
                 let H = date.getHours() < 10 ? '0'+date.getHours() : date.getHours()
                 let m = date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes()
                 let S = date.getSeconds() < 10 ? '0'+date.getSeconds() : date.getSeconds()
-                return date.getFullYear()+'-'+M+'-'+D
-                // return date.getFullYear()+'-'+M+'-'+D+' '+H+':'+m+':'+S
+                if ( type == 'all') 
+                    return date.getFullYear()+'-'+M+'-'+D+' '+H+':'+m+':'+S
+                else if ( type == 'year') 
+                    return date.getFullYear()+'-'+M+'-'+D
+                else if ( type == 'month') 
+                    return M+'-'+D
+                else if ( type == 'day') 
+                    return H+':'+m
+                else
+                    return date.getFullYear()+'-'+M+'-'+D
             },
             getRandomClassName(){
                 let self = this
@@ -1344,12 +1370,12 @@
                         "imgFill":'cover',
                         //直播状态
                         "logo":{
-                            "imgUrl":'http://shixiantest.oss-cn-hangzhou.aliyuncs.com/48/posts/2020/11/03/344b93fef7622f36d8ff2eaf88e92415.png',
+                            "imgUrl":'http://shixiantest.oss-cn-hangzhou.aliyuncs.com/49/posts/2021/07/06/782571effb2cdcf5782162ed54e493c3.png',
                             "imgFill":'cover',
                             "common":{
                                 "size":{
                                     "width":10,
-                                    "height":10
+                                    "height":9
                                 },
                             }
                         },
@@ -1374,6 +1400,7 @@
                         //参与人数
                         "takePart":{
                             "textContent":'2331人参与',
+                            "textContent_style":'none',
                             "color":{
                                 "textColor":"#ffffff",
                                 "bgColor":"#666",
@@ -1387,7 +1414,7 @@
                             },
                             "common":{
                                 "size":{
-                                    "height":15
+                                    "height":'auto'
                                 },
                             }
                         },
@@ -1506,7 +1533,7 @@
                         }
                     },
                     "read":{
-                        "textContent":'3232',
+                        "textContent":'3232阅读',
                         "textContent_style":'none',
                         "color":{
                             "textColor":"#000000"
@@ -1628,6 +1655,8 @@
                 top: 15px;
                 left: 10px;
                 height: 21px;
+                border-radius: 3px;
+                overflow: hidden;
                 .logo-status{
                     display: inline-block;
                     padding: 0 5px;
@@ -1642,7 +1671,7 @@
                     padding: 0 5px;
                 }
                 .status{
-                    margin-right: 12px;
+                    margin-right: 3px;
                 }
             }
             .img-bottom-title{

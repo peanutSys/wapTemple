@@ -1,3 +1,7 @@
+@font-face {
+  font-family: 'SourceHanSerif';
+  src: url('https://oss.cztv.com/uploads/2021-04-29/1619681802670688842_SourceHanSerifSC-Regular.ttf');
+}
 *{
 	margin:0;
     padding:0;
@@ -14,7 +18,8 @@ body,html,.app,.wrap{
     /* overflow-x: hidden; */
 }
 body{
-    font-family:"Helvetica Neue",Helvetica, "microsoft yahei", arial, STHeiTi, sans-serif;
+    font-family:"SourceHanSerif","Helvetica Neue",Helvetica, "microsoft yahei", arial, STHeiTi, sans-serif;
+    line-height: 25px;
 }
 .fade-enter,.fade-leave{
 	opacity: 0;

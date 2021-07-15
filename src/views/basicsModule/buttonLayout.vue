@@ -38,7 +38,7 @@
                     //文字排列方式
                     stystrr += self.getStr('text-align',all_d.text.textAlignment == 0 ? 'left' : all_d.text.textAlignment == 1 ? 'center' :'right'   );
                     stystrr += self.getStr('font-size',all_d.text.font+'px');
-                    stystrr += self.getStr('font-family',all_d.text.familyName || '');
+                    // stystrr += self.getStr('font-family',all_d.text.familyName || '');
                 }
 
                 if ( all_d.common) {
@@ -124,7 +124,5 @@
 </script>
 
 <style scoped>
-    .aa{
-        
-    }
+
 </style>

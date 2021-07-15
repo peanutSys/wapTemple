@@ -28,9 +28,9 @@
                 </div>
             </div>
             <div class="read-btn" >
-                <div class="img">
+                <!-- <div class="img">
                     <img src="../../../../../static/img/look.png">
-                </div>
+                </div> -->
                 <LabelLayout class='read' :layout_data='local_data.read'></LabelLayout>
             </div>
         </div>
@@ -802,7 +802,7 @@
                     })
                     $tag.text( baseData.tags)
                     $time.text( self.getTimeFormatter(baseData.createdAt*1000))
-                    $read.text( baseData.viewBaseNum)
+                    $read.text( baseData.viewBaseNum+'阅读')
                     baseData.live == 0 ? $status.css('display','none') : (function(){
                         let liveStatus = baseData.live == 1 ? '预告' :
                                         baseData.live == 2 ? '直播' :
